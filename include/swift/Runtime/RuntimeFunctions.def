@@ -1423,8 +1423,26 @@ FUNCTION(GetTypeByMangledNameInContextInMetadataState,
               Int8PtrPtrTy),
          ATTRS(NoUnwind, ArgMemOnly))
 
-// void swift_rt_gc_debug_aux();
+// void swift_rt_gc_debug_aux()
 FUNCTION(GCDebugAux, swift_rt_gc_debug_aux, C_CC, AlwaysAvailable,
+         RETURNS(VoidTy), NO_ARGS, NO_ATTRS)
+
+//void swift_rt_mutator_write_barrier(HeapObject *object)
+FUNCTION(MutatorWriteBarrier, swift_rt_mutator_write_barrier, C_CC, AlwaysAvailable,
+         RETURNS(VoidTy),
+         ARGS(RefCountedPtrTy),
+         ATTRS(NoUnwind, FirstParamReturned))
+
+//void swift_rt_mutator_poll_upon_safepoint(void)
+FUNCTION(MutatorPollUponSafepoint, swift_rt_mutator_poll_upon_safepoint, C_CC, AlwaysAvailable,
+         RETURNS(VoidTy), NO_ARGS, NO_ATTRS)
+
+//void swift_rt_gc_thread_main(void)
+FUNCTION(GCThreadMain, swift_rt_gc_thread_main, C_CC, AlwaysAvailable,
+         RETURNS(VoidTy), NO_ARGS, NO_ATTRS)
+
+//void swift_rt_initialize_gc(void)
+FUNCTION(InitializeGC, swift_rt_initialize_gc, C_CC, AlwaysAvailable,
          RETURNS(VoidTy), NO_ARGS, NO_ATTRS)
 
 #undef RETURNS

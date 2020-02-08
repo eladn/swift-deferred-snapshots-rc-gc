@@ -59,6 +59,14 @@ void _swift_zone_init(void);
 // GC
 SWIFT_RUNTIME_EXPORT
 void (*_swift_rt_gc_debug_aux)(void);
+SWIFT_RUNTIME_EXPORT
+void (*_swift_rt_mutator_write_barrier)(HeapObject *object);
+SWIFT_RUNTIME_EXPORT
+void (*_swift_rt_mutator_poll_upon_safepoint)(void);
+SWIFT_RUNTIME_EXPORT
+void (*_swift_rt_gc_thread_main)(void);
+SWIFT_RUNTIME_EXPORT
+void (*_swift_rt_initialize_gc)(void);
 
 };
 
