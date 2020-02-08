@@ -35,6 +35,7 @@ set(swift_runtime_sources
     Casting.cpp
     CompatibilityOverride.cpp
     CygwinPort.cpp
+    DeferredSnapshotRCGC.cpp
     Demangle.cpp
     Enum.cpp
     ErrorObjectCommon.cpp

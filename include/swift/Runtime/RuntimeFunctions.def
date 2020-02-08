@@ -1423,6 +1423,10 @@ FUNCTION(GetTypeByMangledNameInContextInMetadataState,
               Int8PtrPtrTy),
          ATTRS(NoUnwind, ArgMemOnly))
 
+// void swift_rt_gc_debug_aux();
+FUNCTION(GCDebugAux, swift_rt_gc_debug_aux, C_CC, AlwaysAvailable,
+         RETURNS(VoidTy), NO_ARGS, NO_ATTRS)
+
 #undef RETURNS
 #undef ARGS
 #undef ATTRS

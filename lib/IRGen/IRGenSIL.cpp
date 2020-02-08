@@ -51,6 +51,7 @@
 #include "swift/SIL/SILVisitor.h"
 #include "swift/SIL/InstructionUtils.h"
 #include "clang/CodeGen/CodeGenABITypes.h"
+#include "swift/Demangling/Demangle.h"
 
 #include "CallEmission.h"
 #include "Explosion.h"
@@ -1686,6 +1687,14 @@ void IRGenModule::emitSILFunction(SILFunction *f) {
   IRGenSILFunction(*this, f).emitSILFunction();
 }
 
+extern llvm::cl::opt<bool> SILFullDemangle;
+static std::string demangleSymbol(StringRef Name) {
+  if (SILFullDemangle)
+    return Demangle::demangleSymbolAsString(Name);
+  return Demangle::demangleSymbolAsString(Name,
+                                          Demangle::DemangleOptions::SimplifiedUIDemangleOptions());
+}
+
 void IRGenSILFunction::emitSILFunction() {
   LLVM_DEBUG(llvm::dbgs() << "emitting SIL function: ";
              CurSILFn->printName(llvm::dbgs());
@@ -1728,6 +1737,12 @@ void IRGenSILFunction::emitSILFunction() {
 
   auto entry = LoweredBBs.begin();
   Builder.SetInsertPoint(entry->second.bb);
+
+  // Auxiliary tool for GC debugging and development.
+  bool curFnTriggersGCDebugAux = demangleSymbol(CurSILFn->getName()).compare("GCDebugAux()") == 0;
+  if (curFnTriggersGCDebugAux) {
+    Builder.CreateCall(IGM.getGCDebugAuxFn(), {});  // llvm::CallInst
+  }
 
   // Map the LLVM arguments to arguments on the entry point BB.
   Explosion params = collectParameters();
