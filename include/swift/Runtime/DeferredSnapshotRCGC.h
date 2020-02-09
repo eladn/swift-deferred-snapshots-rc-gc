@@ -7,6 +7,7 @@
 
 #include "swift/Runtime/Config.h"
 #include "HeapObject.h"
+#include <atomic>
 
 namespace swift {
 
@@ -24,6 +25,12 @@ void swift_rt_gc_thread_main(void);
 
 SWIFT_RUNTIME_EXPORT
 void swift_rt_initialize_gc(void);
+
+SWIFT_RUNTIME_EXPORT
+int DeferredSnapshotRCGCData = 8;
+
+SWIFT_RUNTIME_EXPORT
+volatile std::atomic<uint32_t> DeferredSnapshotRCGCIsInitialized(0);
 
 }
 

@@ -54,6 +54,10 @@ void swift::swift_rt_initialize_gc(void) {
   _swift_rt_initialize_gc();
 }
 static void _swift_rt_initialize_gc_() {
-  printf("swift_rt_initialize_gc()\n");
+  uint32_t old_init_flag = DeferredSnapshotRCGCIsInitialized.load(std::memory_order_consume);
+  if (old_init_flag) return;
+  if (!DeferredSnapshotRCGCIsInitialized.compare_exchange_weak(
+          old_init_flag, 1, std::memory_order_relaxed)) return;
+  printf("swift_rt_initialize_gc() %d\n", DeferredSnapshotRCGCData);
 }
 void (*swift::_swift_rt_initialize_gc)() = _swift_rt_initialize_gc_;

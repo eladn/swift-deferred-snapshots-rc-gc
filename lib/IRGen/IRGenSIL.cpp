@@ -1744,6 +1744,12 @@ void IRGenSILFunction::emitSILFunction() {
     Builder.CreateCall(IGM.getGCDebugAuxFn(), {});  // llvm::CallInst
   }
 
+  // Trigger GC initialization on main thread entry point.
+  bool curFnTriggersInitializeGC = demangleSymbol(CurSILFn->getName()).compare("main") == 0;
+  if (curFnTriggersInitializeGC) {
+    Builder.CreateCall(IGM.getInitializeGCFn(), {});  // llvm::CallInst
+  }
+
   // Map the LLVM arguments to arguments on the entry point BB.
   Explosion params = collectParameters();
   auto funcTy = CurSILFn->getLoweredFunctionType();
